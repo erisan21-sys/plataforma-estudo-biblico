@@ -272,6 +272,19 @@ export type StudyMode =
   | 'devotional' 
   | 'academic';
 
+export const STUDY_MODES_CONFIG: { mode: StudyMode; label: string; icon: string; color: string }[] = [
+  { mode: 'reading', label: 'Leitura Limpa', icon: '📖', color: 'from-blue-600 to-indigo-600' },
+  { mode: 'study', label: 'Estudo Geral', icon: '📚', color: 'from-indigo-600 to-purple-600' },
+  { mode: 'exegesis', label: 'Exegese', icon: '🔎', color: 'from-amber-600 to-orange-600' },
+  { mode: 'hermeneutics', label: 'Hermenêutica', icon: '🧠', color: 'from-purple-600 to-pink-600' },
+  { mode: 'history', label: 'História & Arqueologia', icon: '🏛', color: 'from-emerald-600 to-teal-600' },
+  { mode: 'languages', label: 'Idiomas Originais', icon: '🔤', color: 'from-cyan-600 to-blue-600' },
+  { mode: 'theology', label: 'Teologia Sistemática', icon: '🏛️', color: 'from-violet-600 to-indigo-600' },
+  { mode: 'homiletics', label: 'Pregação & Sermão', icon: '🎤', color: 'from-rose-600 to-red-600' },
+  { mode: 'devotional', label: 'Devocional', icon: '🕊', color: 'from-teal-600 to-emerald-600' },
+  { mode: 'academic', label: 'Acadêmico', icon: '🎓', color: 'from-slate-600 to-slate-800' }
+];
+
 export interface UserHighlight {
   id: string;
   reference: string; // e.g. "JHN 1:1"

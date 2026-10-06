@@ -56,8 +56,6 @@ export const StudyDrawer: React.FC<StudyDrawerProps> = ({
     setActiveTab(initialTab);
   }, [initialTab]);
 
-  if (!isOpen) return null;
-
   const handleSendMessage = (textToSend?: string) => {
     const text = textToSend || userInput;
     if (!text.trim()) return;
@@ -99,6 +97,8 @@ export const StudyDrawer: React.FC<StudyDrawerProps> = ({
     { id: 'homiletics', label: 'Homilética & Sermão', icon: '🎤', color: 'text-rose-400' },
     { id: 'consultant', label: 'Consultor IA', icon: '🤖', color: 'text-purple-300' }
   ];
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
