@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bíblia & Teologia AI — Demonstração Interativa</title>
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --accent-indigo: #6366f1;
+      --accent-purple: #8b5cf6;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --accent-cyan: #06b6d4;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+      border: 1px solid #312e81;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed, #d97706);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+    }
+
+    .brand-title h1 {
+      font-size: 22px;
+      font-weight: 800;
+      background: linear-gradient(to right, #ffffff, #c7d2fe, #fde68a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-title p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    /* Main Grid */
+    .app-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .app-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Section Cards */
+    .panel {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-col: column;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Bible Reader View */
+    .verse-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .verse-card {
+      padding: 14px 16px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .verse-card:hover {
+      background: rgba(30, 41, 59, 0.8);
+      border-color: #475569;
+    }
+
+    .verse-card.selected {
+      background: linear-gradient(135deg, rgba(49, 46, 129, 0.5) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border: 1px solid var(--accent-indigo);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
+    }
+
+    .verse-num {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .verse-text {
+      font-family: Georgia, Cambria, "Times New Roman", serif;
+      font-size: 16px;
+      color: #f1f5f9;
+      line-height: 1.6;
+    }
+
+    /* Floating Toolbar Simulation */
+    .context-bar {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #1e1b4b, #0f172a);
+      border: 1px solid #4338ca;
+      border-radius: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn-action {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #334155;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-action:hover {
+      background: #334155;
+      border-color: #64748b;
+      transform: translateY(-1px);
+    }
+
+    .btn-action.primary {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #020617;
+      border: none;
+      font-weight: 800;
+    }
+
+    .btn-action.ai {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      color: white;
+      border: none;
+      font-weight: 700;
+    }
+
+    /* Tabs Bar */
+    .tabs-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: #1e1b4b;
+      border-color: #4f46e5;
+    }
+
+    /* Tab Content Boxes */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .info-card {
+      background: #020617;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .info-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .info-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tag-confidence {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .tag-confidence.high {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+
+    .tag-confidence.debate {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+    }
+
+    .tag-confidence.hypothesis {
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.4);
+      color: #fb7185;
+    }
+
+    .greek-box {
+      font-family: "Palatino Linotype", "Times New Roman", serif;
+      font-size: 18px;
+      font-weight: bold;
+      color: #38bdf8;
+      background: #090d16;
+      border: 1px solid #1e293b;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    /* AI Consultant Chat */
+    .chat-box {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+
+    .chat-msg {
+      padding: 14px 16px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .chat-msg.consultant {
+      background: #090d16;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      border-top-left-radius: 2px;
+    }
+
+    .chat-msg.user {
+      background: #4f46e5;
+      color: white;
+      align-self: flex-end;
+      border-top-right-radius: 2px;
+      max-width: 80%;
+    }
+
+    .prompt-chip {
+      background: #1e1b4b;
+      border: 1px solid #4338ca;
+      color: #c7d2fe;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-block;
+      margin: 3px;
+    }
+
+    .prompt-chip:hover {
+      background: #312e81;
+      color: white;
+    }
+
+    /* Live link box */
+    .live-preview-banner {
+      background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+      color: white;
+      padding: 14px 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Top Brand Header -->
+    <header>
+      <div class="brand">
+        <div class="logo-badge">📖</div>
+        <div class="brand-title">
+          <h1>Bíblia & Teologia AI</h1>
+          <p>Plataforma Hermenêutica de Estudo Bíblico Profundo • PWA & Web</p>
+        </div>
+      </div>
+      
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <span class="status-badge">
+          <span class="pulse"></span>
+          Servidor Ativo em Tempo Real (Porta 3000)
+        </span>
+      </div>
+    </header>
+
+    <!-- Main Workspace Layout -->
+    <div class="app-layout">
+      
+      <!-- Left Column: Biblical Reader -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>📖</span>
+            <span>João 1:1–5 (Almeida Revista e Corrigida)</span>
+          </div>
+          <span class="tag-confidence high">Texto Canônico</span>
+        </div>
+
+        <div class="verse-list">
+          <div class="verse-card selected" onclick="highlightVerse(this)">
+            <span class="verse-num">1</span>
+            <span class="verse-text">No princípio era o Verbo, e o Verbo estava com Deus, e o Verbo era Deus.</span>
+          </div>
+          <div class="verse-card selected" onclick="highlightVerse(this)">
+            <span class="verse-num">2</span>
+            <span class="verse-text">Ele estava no princípio com Deus.</span>
+          </div>
+          <div class="verse-card selected" onclick="highlightVerse(this)">
+            <span class="verse-num">3</span>
+            <span class="verse-text">Todas as coisas foram feitas por ele, e sem ele nada do que foi feito se fez.</span>
+          </div>
+          <div class="verse-card selected" onclick="highlightVerse(this)">
+            <span class="verse-num">4</span>
+            <span class="verse-text">Nele estava a vida, e a vida era a luz dos homens.</span>
+          </div>
+          <div class="verse-card selected" onclick="highlightVerse(this)">
+            <span class="verse-num">5</span>
+            <span class="verse-text">E a luz resplandece nas trevas, e as trevas não a compreenderam.</span>
+          </div>
+        </div>
+
+        <!-- Floating Contextual Toolbar -->
+        <div class="context-bar">
+          <span style="font-size: 11px; font-weight: 700; color: #c7d2fe; margin-right: 4px;">
+            Trecho Selecionado: João 1:1–5
+          </span>
+          <button class="btn-action primary" onclick="setTab('exegesis')">🔎 Exegese</button>
+          <button class="btn-action" onclick="setTab('hermeneutics')">🧠 Hermenêutica</button>
+          <button class="btn-action" onclick="setTab('history')">🏛 História</button>
+          <button class="btn-action" onclick="setTab('theology')">📚 Teologia</button>
+          <button class="btn-action" onclick="setTab('languages')">🔤 Idiomas</button>
+          <button class="btn-action" onclick="setTab('homiletics')">🎤 Sermão</button>
+          <button class="btn-action ai" onclick="setTab('consultant')">🤖 Consultor IA</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Multi-tab Study Workspace -->
+      <div class="panel">
+        
+        <!-- Tab Navigation Bar -->
+        <div class="tabs-bar">
+          <button class="tab-btn active" id="tab-overview-btn" onclick="setTab('overview')">📖 Visão Geral</button>
+          <button class="tab-btn" id="tab-exegesis-btn" onclick="setTab('exegesis')">🔎 Exegese</button>
+          <button class="tab-btn" id="tab-hermeneutics-btn" onclick="setTab('hermeneutics')">🧠 Hermenêutica</button>
+          <button class="tab-btn" id="tab-history-btn" onclick="setTab('history')">🏛 História</button>
+          <button class="tab-btn" id="tab-theology-btn" onclick="setTab('theology')">📚 Teologia</button>
+          <button class="tab-btn" id="tab-languages-btn" onclick="setTab('languages')">🔤 Idiomas</button>
+          <button class="tab-btn" id="tab-homiletics-btn" onclick="setTab('homiletics')">🎤 Sermão</button>
+          <button class="tab-btn" id="tab-consultant-btn" onclick="setTab('consultant')">🤖 Consultor IA</button>
+        </div>
+
+        <!-- TAB 1: VISÃO GERAL -->
+        <div class="tab-content active" id="tab-overview">
+          <div class="info-card">
+            <div class="info-card-header">
+              <span class="info-card-title" style="color: #818cf8;">Síntese Teológica Executiva</span>
+              <span class="tag-confidence high">🟢 Alta Confiança</span>
+            </div>
+            <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+              O Prólogo Joanino (1:1–5) estabelece a <strong>preexistência eterna</strong>, a <strong>divindade ontológica plena</strong> e o <strong>papel criador do Logos</strong> (o Verbo), que é a fonte de vida e luz irreprimível em contraste absoluto com as trevas do cosmos decaído.
+            </p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="info-card">
+              <span class="info-card-title" style="color: #f59e0b; display: block; margin-bottom: 6px;">Gênero Literário</span>
+              <p style="font-size: 12px; color: #94a3b8;">Hino Teológico e Prólogo Cristológico da Revelação Joanina.</p>
+            </div>
+            <div class="info-card">
+              <span class="info-card-title" style="color: #10b981; display: block; margin-bottom: 6px;">Datação & Império</span>
+              <p style="font-size: 12px; color: #94a3b8;">c. 85–95 d.C. sob o Império Romano (Éfeso / Ásia Menor).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: EXEGESE -->
+        <div class="tab-content" id="tab-exegesis">
+          <div class="info-card">
+            <div class="info-card-header">
+              <span class="info-card-title" style="color: #f59e0b;">Exegese Verso por Verso (Jo 1:1)</span>
+              <span class="tag-confidence high">🟢 Consenso Grego</span>
+            </div>
+            <div class="greek-box">
+              Ἐν ἀρχῇ ἦν ὁ Λόγος, καὶ ὁ Λόγος ἦν πρὸς τὸν Θεόν, καὶ Θεὸς ἦν ὁ Λόγος.
+            </div>
+            <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+              <strong>Análise Morfossintática:</strong> O verbo <em>ēn</em> (imperfeito contínuo) denota existência atemporal. A construção <em>Theos ēn ho Logos</em> utiliza <em>Theos</em> sem artigo preposto como predicativo do sujeito (Regra de Colwell), expressando que o Logos é qualitativamente e em essência Deus, sem se confundir com a pessoa do Pai (<em>pros ton Theon</em>).
+            </p>
+          </div>
+        </div>
+
+        <!-- TAB 3: HERMENÊUTICA -->
+        <div class="tab-content" id="tab-hermeneutics">
+          <div class="info-card">
+            <div class="info-card-header">
+              <span class="info-card-title" style="color: #a855f7;">Intenção Comunicativa do Autor</span>
+              <span class="tag-confidence high">🟢 Consenso Canônico</span>
+            </div>
+            <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+              João redige com o propósito explícito de refutar o proto-gnosticismo nascente (cerintianismo e docetismo) e provar que Jesus é o Cristo, o Filho de Deus, a Palavra criadora de Gênesis 1 que se fez homem real para redenção dos que creem.
+            </p>
+          </div>
+        </div>
+
+        <!-- TAB 4: HISTÓRIA & ARQUEOLOGIA -->
+        <div class="tab-content" id="tab-history">
+          <div class="info-card">
+            <div class="info-card-header">
+              <span class="info-card-title" style="color: #10b981;">Evidência Arqueológica: Papiro P52 & P66</span>
+              <span class="tag-confidence high">🟢 Evidência Material</span>
+            </div>
+            <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+              O <strong>Papiro Rylands 457 (P52)</strong>, datado de c. 125–135 d.C., e os <strong>Papiros Bodmer (P66)</strong> atestam a circulação primitiva do texto grego do Evangelho de João no Mediterrâneo oriental, confirmando a antiguidade e preservação impecável dos manuscritos.
+            </p>
+          </div>
+        </div>
+
+        <!-- TAB 5: TEOLOGIA SISTEMÁTICA -->
+        <div class="tab-content" id="tab-theology">
+          <div class="info-card">
+            <div class="info-card-header">
+              <span class="info-card-title" style="color: #8b5cf6;">Cristologia & Teologia Própria (Trindade)</span>
+              <span class="tag-confidence high">🟢 Doutrina Histórica</span>
+            </div>
+            <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+              • <strong>Preexistência:</strong> O Verbo existia antes de todo o tempo cósmico.<br>
+              • <strong>Distinção Pessoal:</strong> O Verbo estava <em>com</em> Deus (relacionamento intra-trinitário).<br>
+              • <strong>Divindade Ontológica:</strong> O Verbo <em>era</em> Deus em essência, poder e majestade.
+            </p>
+          </div>
+        </div>
+
+        <!-- TAB 6: IDIOMAS ORIGINAIS -->
+        <div class="tab-content" id="tab-languages">
+          <div class="info-card">
+            <div class="info-card-header">
+              <span class="info-card-title" style="color: #06b6d4;">Vocábulo Grego: Λόγος (Logos)</span>
+              <span class="tag-confidence high">Strong: G3056</span>
+            </div>
+            <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+              <strong>Transliteração:</strong> <em>Logos</em> | <strong>Raiz:</strong> <em>legō</em> (dizer, falar)<br>
+              <strong>Significado Primário:</strong> Palavra, Verbo, Revelação Divina Expressa.<br>
+              <strong>Campo Semântico:</strong> No contexto bíblico, evoca o <em>Dabar Yahweh</em> ("A Palavra do Senhor") criador do Antigo Testamento (Sl 33:6; Is 55:11).
+            </p>
+          </div>
+        </div>
+
+        <!-- TAB 7: HOMILÉTICA & SERMÃO -->
+        <div class="tab-content" id="tab-homiletics">
+          <div class="info-card">
+            <div class="info-card-header">
+              <span class="info-card-title" style="color: #f43f5e;">Esboço de Sermão: "A Luz Inabalável do Verbo"</span>
+              <span class="tag-confidence high">Proposição Homilética</span>
+            </div>
+            <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+              <strong>I. A Eternidade e Divindade do Verbo (vv. 1-2)</strong><br>
+              <strong>II. O Poder Criador e Vivificador de Cristo (vv. 3-4)</strong><br>
+              <strong>III. O Triunfo Irreversível da Luz sobre as Trevas (v. 5)</strong><br><br>
+              <em style="color: #fda4af;">👉 Aplicação: Nenhuma escuridão de pecado ou crise tem o poder ontológico de sufocar a luz viva de Jesus Cristo.</em>
+            </p>
+          </div>
+        </div>
+
+        <!-- TAB 8: CONSULTOR IA -->
+        <div class="tab-content" id="tab-consultant">
+          <div style="margin-bottom: 10px;">
+            <span style="font-size: 11px; color: #94a3b8; font-weight: bold;">Perguntas Rápidas Ancoradas:</span><br>
+            <span class="prompt-chip" onclick="askAi('Por que o autor usou a palavra Logos em vez de Sophia?')">💬 Por que Logos?</span>
+            <span class="prompt-chip" onclick="askAi('Como esse texto era entendido no século I em Éfeso?')">💬 Contexto do Século I</span>
+            <span class="prompt-chip" onclick="askAi('Quais são as correntes divergentes de interpretação?')">💬 Debates Teológicos</span>
+          </div>
+
+          <div class="chat-box" id="chat-box">
+            <div class="chat-msg consultant">
+              <strong>🤖 Consultor Teológico IA:</strong><br>
+              O contexto ativo está ancorado em <strong>João 1:1–5</strong>. Como posso enriquecer sua exegese, pesquisa histórica ou estruturação homilética hoje?
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    function setTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+      const target = document.getElementById('tab-' + tabId);
+      const btn = document.getElementById('tab-' + tabId + '-btn');
+      if (target) target.classList.add('active');
+      if (btn) btn.classList.add('active');
+    }
+
+    function askAi(promptText) {
+      setTab('consultant');
+      const chat = document.getElementById('chat-box');
+      
+      const userDiv = document.createElement('div');
+      userDiv.className = 'chat-msg user';
+      userDiv.textContent = promptText;
+      chat.appendChild(userDiv);
+
+      setTimeout(() => {
+        const respDiv = document.createElement('div');
+        respDiv.className = 'chat-msg consultant';
+        respDiv.innerHTML = '<strong>🤖 Consultor Teológico IA (🟢 Alta Confiança):</strong><br>Na perspectiva do século I em Éfeso, o termo <em>Logos</em> construía uma ponte apologética extraordinária: para os judeus da Diáspora, remetia ao <em>Dabar Yahweh</em> criador; para os gregos educados, remetia à Razão ordenadora do cosmos. João resgata o termo e declara: a Razão eterna do universo não é uma abstração filosófica fria, mas a Pessoa viva de Jesus Cristo encarnado!';
+        chat.appendChild(respDiv);
+        chat.scrollTop = chat.scrollHeight;
+      }, 300);
+    }
+
+    function highlightVerse(card) {
+      card.classList.toggle('selected');
+    }
+  </script>
+</body>
+</html>

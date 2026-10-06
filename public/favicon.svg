@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="50%" stop-color="#7c3aed" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#bg)" />
+  <!-- Open Book -->
+  <path d="M96 160C144 140 216 150 256 180C296 150 368 140 416 160V370C368 350 296 360 256 390C216 360 144 350 96 370V160Z" fill="#0f172a" stroke="url(#gold)" stroke-width="14" stroke-linejoin="round" />
+  <!-- Spine Line -->
+  <path d="M256 180V390" stroke="url(#gold)" stroke-width="12" stroke-linecap="round" />
+  <!-- Cross in Center -->
+  <path d="M256 110V170M236 135H276" stroke="url(#gold)" stroke-width="14" stroke-linecap="round" />
+  <!-- Page Lines Left -->
+  <path d="M136 220C168 210 208 215 236 230M136 260C168 250 208 255 236 270M136 300C168 290 208 295 236 310" stroke="#94a3b8" stroke-width="8" stroke-linecap="round" />
+  <!-- Page Lines Right -->
+  <path d="M376 220C344 210 304 215 276 230M376 260C344 250 304 255 276 270M376 300C344 290 304 295 276 310" stroke="#94a3b8" stroke-width="8" stroke-linecap="round" />
+</svg>
