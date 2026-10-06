@@ -6,23 +6,10 @@ import {
   X, 
   BookOpen, 
   Sparkles, 
-  Search, 
-  Share2, 
-  Download, 
   Bookmark, 
-  Layers, 
   Send, 
   CheckCircle2, 
-  HelpCircle, 
   AlertTriangle,
-  FileText,
-  Mic2,
-  Languages,
-  History,
-  Link,
-  HeartHandshake,
-  ShieldCheck,
-  ChevronRight,
   Printer
 } from 'lucide-react';
 

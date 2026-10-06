@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import type { 
   BibleBook, 
   BibleVerse, 
-  BibleVersion, 
   StudyMode, 
   ComprehensiveStudyDossier,
   UserHighlight,

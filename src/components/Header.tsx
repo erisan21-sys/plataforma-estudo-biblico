@@ -65,8 +65,6 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSermonBuilder,
   onOpenSettings
 }) => {
-  const currentModeConfig = STUDY_MODES_CONFIG.find(m => m.mode === activeMode) || STUDY_MODES_CONFIG[0];
-
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-xl transition-colors">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
